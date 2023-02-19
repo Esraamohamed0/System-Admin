@@ -1,0 +1,17 @@
+1-
+sudo useradd itiuser1
+sudo useradd itiuser2
+2-
+sudo groupadd os_team
+3-
+mkdir os_team_workspace
+4-
+sudo chgrp os_team os_team workspace
+sudo chmod g+s  os_team workspace
+5-
+sudo usermod -a -G os_team itiuser1 
+sudo usermod -a -G os_team itiuser2
+6-
+Mkdir mydir1 mydir2
+sudo chown itiuser1 mydir1
+sudo chown itiuser2 mydir2
