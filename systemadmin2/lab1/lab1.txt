@@ -1,0 +1,47 @@
+1-Using Loop devices, create 4  PVs
+>>dd if=/dev/zero of=disk1.disk bs=1024 count=100000
+>>dd if=/dev/zero of=disk2.disk bs=1024 count=100000
+>>dd if=/dev/zero of=disk3.disk bs=1024 count=100000
+>>dd if=/dev/zero of=disk4.disk bs=1024 count=100000
+>>sudo losetup /dev/loop25 disk1.disk
+>>sudo losetup /dev/loop26 disk2.disk
+>>sudo losetup /dev/loop27 disk3.disk
+>>sudo losetup /dev/loop28 disk4.disk
+
+2-create VG and add 3 on PVs to it
+>>sudo pvcreate /dev/loop25 /dev/loop26 /dev/loop27
+
+3-create LV which has size of 250M
+>>sudo lvcreate -L 250 -n LV VG
+
+4-format LV using ext4
+>>sudo mkfs.ext4 /dev/VG/LV
+
+5-mount LV into /mnt directory
+>>sudo mount /dev/VG/LV /mnt
+
+6-extend VG with the remaining PV
+>>sudo vgextend VG /dev/loop28
+
+7-extend LV with +50M
+>>sudo lvextend -L +50 /dev/VG/LV
+
+8-resize2fs LV with the 50M extra
+>>sudo umount /dev/VG/LV
+>>sudo e2fsck -f /dev/VG/LV
+>>sudo resize2fs /dev/VG/LV 50M
+
+
+
+__________network___________
+
+1-Display the network interface information using ip command
+>>ip addr show
+
+2-Display currently active TCP connections on your OS using netstatcommand
+>>sudo apt install nmap
+>>netstat -t
+
+3-Display currently open ports on your system using nmap command (install it using apt)
+>>sudo apt install nmap
+>>nmap localhost
