@@ -1,0 +1,50 @@
+1-Using apt , install nginx
+$sudo apt remove apache2
+$sudo apt install nginx
+	
+2-Enable port 80 on the firewall 
+$sudo ufw allow http
+$sudo ufw status
+	
+3-Create index.html file on root directory  of the server section and test it
+$sudo nano  /etc/nginx/sites-enabled/default
+
+server {
+        listen 80 default_server;
+        listen [::]:80 default_server;
+        root /var/www/html;
+        index  index.html index.htm index.nginx-debian.html;
+        location / {
+                try_files $uri $uri/ =404;
+        }
+}
+
+$nginx -t
+$nginx -s reload
+ 
+4-Install php-fpm package 
+$sudo apt install php-fpm
+	
+5-configure main site to enable php-fpm
+
+$sudo nano  /etc/nginx/sites-enabled/default
+
+server {
+        listen 80 default_server;
+        listen [::]:80 default_server;
+        root /var/www/html;
+        index  index.html index.htm index.nginx-debian.html;
+        location / {
+
+                try_files $uri $uri/ =404;
+        }
+        location ~ \.php$ {
+
+                include snippets/fastcgi-php.conf;
+                fastcgi_pass unix:/var/run/php/php7.2-fpm.sock;
+
+        }
+}
+	
+6-create index.php file and test it.
+$nano index.php

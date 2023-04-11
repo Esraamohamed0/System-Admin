@@ -1,0 +1,52 @@
+1-Using apt install apache2 server
+$sudo apt install apache2
+$sudo systemctl start apache2
+	
+2-Replace the default index.html content with your own content
+$cd /var/www/html
+$sudo nano main.html
+$sudo mv main.html index.html
+$sudo systemctl restart apache2
+	
+3-install php module for apache2
+$sudo apt install libapache2-mod-php
+	
+4-create new Named VirtulHost to serve new php project with special access log 
+$sudo mkdir /var/www/html/php-project
+	
+5-create simple index.php file for the php site
+$sudo nano /var/www/html/php-project/index.php
+	
+6-configure /etc/hosts for php site.
+$sudo nano /etc/apache2/sites-available/php-project.conf
+<VirtualHost 127.0.0.21:80>
+    ServerName phpproject.com
+    DocumentRoot /var/www/html/php-project
+
+    ErrorLog /var/log/apache2/php-project-error.log
+    CustomLog /var/log/apache2/php-project-access.log combined
+
+    <Directory /var/www/html/php-project>
+        AllowOverride All
+        Require all granted
+    </Directory>
+</VirtualHost>
+$systemctl reload apache2
+$sudo a2ensite myproject.conf
+	
+7-disable directory listing for the new virtualhost
+$sudo nano /etc/apache2/sites-available/php-project.conf
+
+<VirtualHost 127.0.0.21:80>
+    ServerName phpproject.com
+    DocumentRoot /var/www/html/php-project
+
+    ErrorLog /var/log/apache2/php-project-error.log
+    CustomLog /var/log/apache2/php-project-access.log combined
+
+    <Directory /var/www/html/myproject>
+        Options -Indexes
+        AllowOverride All
+        Require all granted
+    </Directory>
+</VirtualHost>
